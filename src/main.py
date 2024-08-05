@@ -17,15 +17,25 @@ hand_order = [
 ]
 
 def print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability):
+    # Print round name with a capital first letter
     print(f"\n{round_name.capitalize()} probabilities of each hand type:")
+    
+    # Print column headers with underlines
     print("{:<20} {:<10} {:<10}".format("Hand Type", "You", "Others"))
+    print("{:<20} {:<10} {:<10}".format("---------", "---", "------"))
+
+    # Print probabilities for each hand type
     for hand_type in hand_order:
         user_prob = user_probabilities.get(hand_type, 0.0) * 100
         opponent_prob = opponent_probabilities.get(hand_type, 0.0) * 100
-        print("{:<20} {:<10.2f} {:<10.2f}".format(hand_type, user_prob, opponent_prob))
+        hand_type_display = hand_type.replace('_', ' ').title()
+        print("{:<20} {:<10.2f} {:<10.2f}".format(hand_type_display, user_prob, opponent_prob))
+    
     print()  # Adding a line of space
     
+    # Print win and tie probabilities
     print("{:<20} {:<10} {:<10}".format("", "You", "Others"))
+    print("{:<20} {:<10} {:<10}".format("", "---", "------"))
     print("{:<20} {:<10.2f} {:<10.2f}".format("Win", win_probability * 100, (100 - win_probability * 100 - tie_probability * 100)))
     print("{:<20} {:<10.2f} {:<10.2f}".format("Tie", tie_probability * 100, tie_probability * 100))
     print()  # Adding a line of space
