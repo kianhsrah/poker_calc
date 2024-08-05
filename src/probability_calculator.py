@@ -24,7 +24,20 @@ def classify_hand(evaluator, board, hand):
     else:
         return 'high_card'
 
-def get_hand_probabilities(evaluator, hand, board, num_players):
+def get_hand_probabilities(evaluator, hand, board, num_players, is_final_round=False):
+    hand_order = [
+        'royal_flush',
+        'straight_flush',
+        'four_of_a_kind',
+        'full_house',
+        'flush',
+        'straight',
+        'three_of_a_kind',
+        'two_pair',
+        'one_pair',
+        'high_card'
+    ]
+    
     deck = Deck()
     
     # Remove already known cards from the deck
@@ -66,6 +79,11 @@ def get_hand_probabilities(evaluator, hand, board, num_players):
     opponent_probabilities = {hand_type: count / (total_simulations * (num_players - 1)) for hand_type, count in opponent_hand_counts.items()}
     win_probability = win_count / total_simulations
     tie_probability = tie_count / total_simulations
-    lose_probability = 1 - win_probability - tie_probability
+
+    if is_final_round:
+        final_user_hand_type = classify_hand(evaluator, board, hand)
+        user_probabilities = {hand_type: (1.0 if hand_type == final_user_hand_type else 0.0) for hand_type in hand_order}
+        win_probability = 1.0 if user_score < best_opponent_score else 0.0
+        tie_probability = 1.0 if user_score == best_opponent_score else 0.0
     
-    return user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability
+    return user_probabilities, opponent_probabilities, win_probability, tie_probability

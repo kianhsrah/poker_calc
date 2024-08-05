@@ -17,7 +17,7 @@ hand_order = [
     'high_card'
 ]
 
-def print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability):
+def print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability):
     print(f"\n{round_name.capitalize()} probabilities of each hand type:")
     print("{:<20} {:<10} {:<10}".format("Hand Type", "You", "Others"))
     for hand_type in hand_order:
@@ -27,9 +27,8 @@ def print_probabilities(round_name, user_probabilities, opponent_probabilities, 
     print()  # Adding a line of space
     
     print("{:<20} {:<10} {:<10}".format("", "You", "Others"))
-    print("{:<20} {:<10.2f} {:<10.2f}".format("Win", win_probability * 100, (1 - win_probability - tie_probability) * 100))
+    print("{:<20} {:<10.2f} {:<10.2f}".format("Win", win_probability * 100, (100 - win_probability * 100 - tie_probability * 100)))
     print("{:<20} {:<10.2f} {:<10.2f}".format("Tie", tie_probability * 100, tie_probability * 100))
-    print("{:<20} {:<10.2f} {:<10.2f}".format("Lose", lose_probability * 100, win_probability * 100))
     print()  # Adding a line of space
 
 def main():
@@ -55,8 +54,8 @@ def main():
             print(f"Invalid card input: {e}. Please try again.")
             continue
         
-        user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability = get_hand_probabilities(evaluator, hand, [], num_players)
-        print_probabilities("Pre-flop", user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability)
+        user_probabilities, opponent_probabilities, win_probability, tie_probability = get_hand_probabilities(evaluator, hand, [], num_players)
+        print_probabilities("Pre-flop", user_probabilities, opponent_probabilities, win_probability, tie_probability)
         
         for round_name in ["flop", "turn", "river"]:
             if round_name == "flop":
@@ -67,6 +66,11 @@ def main():
             board_cards = input(prompt).split()
             if any(card.lower() == 'r' for card in board_cards):
                 sys.exit()
+
+            # Check for correct number of flop cards
+            if round_name == "flop" and len(board_cards) != 3:
+                print("Error: Please enter exactly 3 cards for the flop.")
+                continue
             
             try:
                 board = [parse_card(card) for card in board_cards]
@@ -80,8 +84,12 @@ def main():
                 print("Invalid input. Please enter an integer.")
                 continue
             
-            user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability = get_hand_probabilities(evaluator, hand, board, num_players)
-            print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability)
+            is_final_round = round_name == "river"
+            user_probabilities, opponent_probabilities, win_probability, tie_probability = get_hand_probabilities(evaluator, hand, board, num_players, is_final_round)
+            print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability)
+
+            if is_final_round:
+                break  # End the program after the river round
 
 if __name__ == "__main__":
     main()
