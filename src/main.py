@@ -57,6 +57,7 @@ def main():
         user_probabilities, opponent_probabilities, win_probability, tie_probability = get_hand_probabilities(evaluator, hand, [], num_players)
         print_probabilities("Pre-flop", user_probabilities, opponent_probabilities, win_probability, tie_probability)
         
+        board = []
         for round_name in ["flop", "turn", "river"]:
             if round_name == "flop":
                 prompt = "Enter the flop cards (e.g., 2h 3d 5s): "
@@ -67,13 +68,16 @@ def main():
             if any(card.lower() == 'r' for card in board_cards):
                 sys.exit()
 
-            # Check for correct number of flop cards
+            # Check for correct number of cards for each round
             if round_name == "flop" and len(board_cards) != 3:
                 print("Error: Please enter exactly 3 cards for the flop.")
                 continue
-            
+            elif round_name in ["turn", "river"] and len(board_cards) != 1:
+                print(f"Error: Please enter exactly 1 card for the {round_name}.")
+                continue
+
             try:
-                board = [parse_card(card) for card in board_cards]
+                board.extend([parse_card(card) for card in board_cards])
             except KeyError as e:
                 print(f"Invalid card input: {e}. Please try again.")
                 continue

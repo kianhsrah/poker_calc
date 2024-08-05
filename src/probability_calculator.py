@@ -3,23 +3,24 @@ from collections import defaultdict
 
 def classify_hand(evaluator, board, hand):
     score = evaluator.evaluate(board, hand)
-    if score <= 10:
+    hand_class = evaluator.get_rank_class(score)
+    if hand_class == 1:
         return 'royal_flush'
-    elif score <= 166:
+    elif hand_class == 2:
         return 'straight_flush'
-    elif score <= 322:
+    elif hand_class == 3:
         return 'four_of_a_kind'
-    elif score <= 1599:
+    elif hand_class == 4:
         return 'full_house'
-    elif score <= 1609:
+    elif hand_class == 5:
         return 'flush'
-    elif score <= 2467:
+    elif hand_class == 6:
         return 'straight'
-    elif score <= 3325:
+    elif hand_class == 7:
         return 'three_of_a_kind'
-    elif score <= 6185:
+    elif hand_class == 8:
         return 'two_pair'
-    elif score <= 7462:
+    elif hand_class == 9:
         return 'one_pair'
     else:
         return 'high_card'
@@ -52,7 +53,7 @@ def get_hand_probabilities(evaluator, hand, board, num_players, is_final_round=F
     
     for _ in range(total_simulations):  # Simulate 10,000 games
         # Reset the deck and remove known cards for each simulation
-        deck = Deck()
+        deck.shuffle()
         for card in hand + board:
             deck.cards.remove(card)
         
