@@ -1,7 +1,36 @@
 import sys
 from card_utils import parse_card
-from probability_calculator import get_probability
+from probability_calculator import get_hand_probabilities
 from treys import Evaluator
+
+# Define the hand types in the desired order
+hand_order = [
+    'royal_flush',
+    'straight_flush',
+    'four_of_a_kind',
+    'full_house',
+    'flush',
+    'straight',
+    'three_of_a_kind',
+    'two_pair',
+    'one_pair',
+    'high_card'
+]
+
+def print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability):
+    print(f"\n{round_name.capitalize()} probabilities of each hand type:")
+    print("{:<20} {:<10} {:<10}".format("Hand Type", "You", "Others"))
+    for hand_type in hand_order:
+        user_prob = user_probabilities.get(hand_type, 0.0) * 100
+        opponent_prob = opponent_probabilities.get(hand_type, 0.0) * 100
+        print("{:<20} {:<10.2f} {:<10.2f}".format(hand_type, user_prob, opponent_prob))
+    print()  # Adding a line of space
+    
+    print("{:<20} {:<10} {:<10}".format("", "You", "Others"))
+    print("{:<20} {:<10.2f} {:<10.2f}".format("Win", win_probability * 100, (1 - win_probability - tie_probability) * 100))
+    print("{:<20} {:<10.2f} {:<10.2f}".format("Tie", tie_probability * 100, tie_probability * 100))
+    print("{:<20} {:<10.2f} {:<10.2f}".format("Lose", lose_probability * 100, win_probability * 100))
+    print()  # Adding a line of space
 
 def main():
     evaluator = Evaluator()
@@ -26,8 +55,8 @@ def main():
             print(f"Invalid card input: {e}. Please try again.")
             continue
         
-        probability = get_probability(evaluator, hand, [], num_players)
-        print(f"Pre-flop probability of winning: {probability * 100:.2f}%")
+        user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability = get_hand_probabilities(evaluator, hand, [], num_players)
+        print_probabilities("Pre-flop", user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability)
         
         for round_name in ["flop", "turn", "river"]:
             if round_name == "flop":
@@ -51,8 +80,8 @@ def main():
                 print("Invalid input. Please enter an integer.")
                 continue
             
-            probability = get_probability(evaluator, hand, board, num_players)
-            print(f"{round_name.capitalize()} probability of winning: {probability * 100:.2f}%")
+            user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability = get_hand_probabilities(evaluator, hand, board, num_players)
+            print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability, lose_probability)
 
 if __name__ == "__main__":
     main()
