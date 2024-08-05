@@ -3,7 +3,6 @@ from card_utils import parse_card
 from probability_calculator import get_hand_probabilities
 from treys import Evaluator
 
-# Define the hand types in the desired order
 hand_order = [
     'straight_flush',
     'four_of_a_kind',
@@ -17,35 +16,31 @@ hand_order = [
 ]
 
 def print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability):
-    # Print round name with a capital first letter
     print(f"\n{round_name.capitalize()} probabilities of each hand type:")
     
-    # Print column headers with underlines
     print("{:<20} {:<10} {:<10}".format("Hand Type", "You", "Others"))
     print("{:<20} {:<10} {:<10}".format("---------", "---", "------"))
 
-    # Print probabilities for each hand type
     for hand_type in hand_order:
         user_prob = user_probabilities.get(hand_type, 0.0) * 100
         opponent_prob = opponent_probabilities.get(hand_type, 0.0) * 100
         hand_type_display = hand_type.replace('_', ' ').title()
         print("{:<20} {:<10.2f} {:<10.2f}".format(hand_type_display, user_prob, opponent_prob))
     
-    print()  # Adding a line of space
+    print() 
     
-    # Print win and tie probabilities
     print("{:<20} {:<10} {:<10}".format("", "You", "Others"))
     print("{:<20} {:<10} {:<10}".format("", "---", "------"))
     print("{:<20} {:<10.2f} {:<10.2f}".format("Win", win_probability * 100, (100 - win_probability * 100 - tie_probability * 100)))
     print("{:<20} {:<10.2f} {:<10.2f}".format("Tie", tie_probability * 100, tie_probability * 100))
-    print()  # Adding a line of space
+    print()  
 
 def main():
     evaluator = Evaluator()
     
     while True:
         try:
-            num_players = int(input("How many players are playing? "))
+            num_players = int(input("\nHow many players are playing? "))
             if num_players < 2:
                 raise ValueError("There must be at least 2 players.")
             break
@@ -102,7 +97,7 @@ def main():
             print_probabilities(round_name, user_probabilities, opponent_probabilities, win_probability, tie_probability)
 
             if is_final_round:
-                break  # End the program after the river round
+                sys.exit()  # End the program after the river round
 
 if __name__ == "__main__":
     main()
