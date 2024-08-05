@@ -81,7 +81,6 @@ def get_hand_probabilities(evaluator, hand, board, num_players, is_final_round=F
     if is_final_round:
         final_user_hand_type = classify_hand(evaluator, board, hand)
         user_probabilities = {hand_type: (1.0 if hand_type == final_user_hand_type else 0.0) for hand_type in hand_order}
-        win_probability = 1.0 if user_score < best_opponent_score else 0.0
         tie_probability = 1.0 if user_score == best_opponent_score else 0.0
     
     return user_probabilities, opponent_probabilities, win_probability, tie_probability
