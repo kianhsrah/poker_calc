@@ -5,7 +5,6 @@ from treys import Evaluator
 
 # Define the hand types in the desired order
 hand_order = [
-    'royal_flush',
     'straight_flush',
     'four_of_a_kind',
     'full_house',

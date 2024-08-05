@@ -5,29 +5,26 @@ def classify_hand(evaluator, board, hand):
     score = evaluator.evaluate(board, hand)
     hand_class = evaluator.get_rank_class(score)
     if hand_class == 1:
-        return 'royal_flush'
-    elif hand_class == 2:
         return 'straight_flush'
-    elif hand_class == 3:
+    elif hand_class == 2:
         return 'four_of_a_kind'
-    elif hand_class == 4:
+    elif hand_class == 3:
         return 'full_house'
-    elif hand_class == 5:
+    elif hand_class == 4:
         return 'flush'
-    elif hand_class == 6:
+    elif hand_class == 5:
         return 'straight'
-    elif hand_class == 7:
+    elif hand_class == 6:
         return 'three_of_a_kind'
-    elif hand_class == 8:
+    elif hand_class == 7:
         return 'two_pair'
-    elif hand_class == 9:
+    elif hand_class == 8:
         return 'one_pair'
     else:
         return 'high_card'
 
 def get_hand_probabilities(evaluator, hand, board, num_players, is_final_round=False):
     hand_order = [
-        'royal_flush',
         'straight_flush',
         'four_of_a_kind',
         'full_house',
